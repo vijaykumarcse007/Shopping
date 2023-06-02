@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sign Up Form</title>
+  <style>
+    *{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+    }
+    form{
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin:4% 2%;
+    }
+    input{
+        padding: 7px;
+    }
+    nav {
+    background-color: black;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+  }
+  
+  nav a {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+  }
+  
+  div.left {
+    order: 1;
+  }
+  
+  div.right {
+    order: 2;
+  }
+  </style>
+</head>
+<body>
+    <nav>
+        <div class="left">
+          <a href="#">MeShop.</a>
+        </div>
+        <div class="right">
+          <a href="#">Home</a>
+          <a href="#">Login</a>
+          <a href="#">Signup</a>
+          <a href="#">My Cart</a>
+          <a href="/profile.html">Profile</a>
+
+        </div>
+      </nav>
+ 
+  <form id="signup-form">
+
+    <p style="font-size: 25px; margin: 0;">Signup</p>
+    <input type="text" id="first-name" name="first-name" placeholder="First Name" required>
+
+    <input type="text" id="last-name" name="last-name" placeholder="Last Name" required>
+
+    <input type="email" id="email" name="email" placeholder="Email" required>
+
+    <input type="password" id="password" name="password" placeholder="Password" required>
+
+    <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password" required>
+
+    <button style="width: 10%; padding: 5px; background-color: black; color: white;" type="submit" id="signup-button">Sign Up</button>
+  </form>
+
+  <script>
+    // Get the form element and add an event listener for form submission
+const form = document.getElementById('signup-form');
+form.addEventListener('submit', handleFormSubmit);
+
+// Define an empty array for user data
+let users = [];
+
+// Define a variable for the current user
+let currentUser = null;
+
+// Load user data from local storage
+loadUserData();
+
+// Function to handle form submission
+function handleFormSubmit(event) {
+  event.preventDefault(); // prevent the form from submitting normally
+
+  // Get the values from the form fields
+  const firstName = document.getElementById('first-name').value;
+  const lastName = document.getElementById('last-name').value;
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  const confirmPassword = document.getElementById('confirm-password').value;
+
+  // Check if the password and confirm password fields match
+  if (password !== confirmPassword) {
+    alert("Passwords don't match. Please try again.");
+    return;
+  }
+
+  // Create an object with the user data
+  const user = {
+    firstName,
+    lastName,
+    email,
+    password
+  };
+
+ 
+   // Check if the email already exists in the users array
+   for (let i = 0; i < users.length; i++) {
+    if (users[i].email === email) {
+      alert("Email already exists. Please sign in with a different email.");
+      return;
+    }
+  }
+ 
+    // Add the user object to the users array
+    users.push(user);
+  
+
+  // Save the updated users array to local storage
+  saveUserData();
+
+  // Set the current user to the new user
+  currentUser = user;
+
+  // Update the current user array
+  updateCurrentUserArray();
+
+  // Redirect to the dashboard page
+ window.location.href = 'login.html';
+
+//  localStorage.setItem('login_user',)
+
+}
+
+// Function to load user data from local storage
+function loadUserData() {
+  const storedUsers = localStorage.getItem('users');
+
+  if (storedUsers) {
+    users = JSON.parse(storedUsers);
+  }
+}
+
+// Function to save user data to local storage
+function saveUserData() {
+  localStorage.setItem('users', JSON.stringify(users));
+}
+
+// Function to update the current user array
+function updateCurrentUserArray() {
+  const storedCurrentUser = localStorage.getItem('currentUser');
+
+  if (storedCurrentUser) {
+    const currentUserData = JSON.parse(storedCurrentUser);
+    currentUserData.push(currentUser);
+    localStorage.setItem('currentUser', JSON.stringify(currentUserData));
+  } else {
+    const currentUserData = [currentUser];
+    localStorage.setItem('currentUser', JSON.stringify(currentUserData));
+  }
+}
+
+  </script>
+</body>
+</html>

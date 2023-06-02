@@ -1,0 +1,151 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+    *{
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        font-family: sans-serif;
+    }
+    form{
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin:4% 2%;
+    }
+    a{
+        text-decoration: none;
+        color: white;
+    }
+    input{
+        padding: 9px;
+    }
+    nav {
+    background-color: black;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+  }
+  
+  nav a {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+  }
+  
+  div.left {
+    order: 1;
+  }
+  
+  div.right {
+    order: 2;
+  }
+  a{
+  text-decoration: none;
+  color: white;
+}
+button{
+    background-color: black;
+    width: 7rem;
+    padding: 7px;
+    color: white;
+}
+p{
+    font-size: 25px;
+}
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="left">
+          <a href="#">MeShop.</a>
+        </div>
+        <div class="right">
+          <a href="#" onclick="withoutLogin('home')">Home</a>
+          <a href="#">Login</a>
+          <a href="#" onclick="withoutLogin('signup')">Signup</a>
+          <a href="#" onclick="withoutLogin('cart')">My Cart</a>
+        </div>
+      </nav>
+    <form id="myForm">
+        <p>Login</p>
+        <input type="email" id="email" name="email" placeholder="Email"  required>
+
+        <input type="password" id="password" name="password" placeholder="Password" required>
+
+        <button id="login" type="submit"> Login</button>
+        </button>
+        <!-- <a id="a_login" href="./login.html">Login</a> -->
+
+
+    </form>
+</body>
+<script>
+
+    function withoutLogin(params) {
+     if(params == 'signup'){
+        alert("You have an account dont want to signup !")
+     }else if(params == 'home'){
+         console.log("Home clicked")
+        alert("Login to continue your shopping !")
+     }
+     else{
+        alert("Please login to open your cart !")
+         
+     }
+    }
+     
+    var form = document.querySelector('#myForm')
+
+    form.addEventListener('submit',event=>{
+       event.preventDefault()
+       var userArrStr = localStorage.getItem('users')
+       var userArr = JSON.parse(userArrStr) || [];
+
+
+       var emailEle = document.getElementById('email').value
+       var passEle = document.getElementById('password').value
+
+
+      var user = userArr.find(user => emailEle === user.email && passEle === user.password);
+
+
+        if(user){
+
+            var combo = "abcdef1234567890"
+            var accessToken = "";
+           for(let i = 0; i < 16; i++){
+              accessToken += combo[Math.floor(Math.random()*combo.length)];
+           }
+
+           var name = user.firstName;
+           var email = user.email;
+           var password = user.password
+
+           var loginUser = {"Name":name,"Email":email,"password":password,"Access Token":accessToken}
+
+           localStorage.setItem('login_user',JSON.stringify(loginUser))
+
+           setTimeout(()=>{
+            window.location.href = 'shop/index.html'
+           },1500)
+
+          }
+          else{
+            if (!userArr.some(user => user.email === emailEle) && !userArr.some(user => user.password === passEle)) {
+            alert("You have no account Please sign up to create an account.");
+            window.location.href = 'signup.html'
+          }else
+            alert("Please enter valid credentials")
+        }
+
+            
+    })
+</script>
+</html>

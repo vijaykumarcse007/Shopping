@@ -1,0 +1,165 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <style>
+         *{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+    }
+    form{
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        margin:2% 2%;
+        text-align: center;
+
+    }
+    input{
+        padding: 9px;
+    }
+    nav {
+    background-color: black;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+  }
+  
+  nav a {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+  }
+  
+  div.left {
+    order: 1;
+  }
+  
+  div.right {
+    order: 2;
+  }
+  button{
+    width: 10rem;
+    padding: .5rem;
+    background-color: black;
+    color: white;
+  }
+  
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="left">
+          <a href="#">MeShop</a>
+        </div>
+        <div class="right">
+          <a href="./shop/index.html">Home</a>
+          <a href="./cart/index.html">My Cart</a>
+        </div>
+      </nav>
+    <form id="editName">
+        <h1>My Profile</h1>
+        <input id="firstName" type="text" placeholder="First Name" required>
+        <input id="lastName" type="text" placeholder="Last Name" required>
+        <button type="submit">Save Info</button>
+    </form>
+    <form id="editPass">
+        <h1>Edit Password</h1>
+        <input type="text" id="oldPass" placeholder="Old Password" required>
+        <input type="text" id="newPass" placeholder="New Password" required>
+        <input type="text"  id="confirmPass" placeholder="Confirm New Password" required>
+        <button type="submit">Change Password</button>
+        
+
+    </form>
+    <button type="submit" style="margin-left: 1.5rem;" id="logout">Logout</button>
+
+</body>
+<script>
+
+   var editName = document.getElementById('editName')
+   var editPass = document.getElementById('editPass')
+   var logout = document.getElementById('logout')
+
+   logout.addEventListener('click', ()=>{
+    localStorage.removeItem('login_user');
+    setTimeout(() => {
+         window.location.href = "./login.html";
+      }, 1500);
+   })
+
+  editName.addEventListener('submit',(event)=>{
+    event.preventDefault()
+    var firstName = document.getElementById('firstName').value
+    var lastName = document.getElementById('lastName').value
+
+    var userObject = JSON.parse(localStorage.getItem('login_user'))
+
+
+    //localstorage data updated-in login user  
+    localStorage.setItem('login_user',JSON.stringify(userObject))
+
+
+    var multipleObjects = JSON.parse(localStorage.getItem('users'))
+
+    var singleObject = multipleObjects.find((object)=>object.email === userObject.Email)
+
+
+      singleObject.firstName = firstName;
+      singleObject.lastName = lastName;
+    
+      //localstorage data updated-in multiple users
+      localStorage.setItem('users',JSON.stringify(multipleObjects))
+
+  })
+
+  editPass.addEventListener('submit',(event)=>{
+    event.preventDefault()
+    var oldPass = document.getElementById('oldPass').value
+    var newPass = document.getElementById('newPass').value
+    var confirmPass = document.getElementById('confirmPass').value
+
+
+    var userObject = JSON.parse(localStorage.getItem('login_user'))
+    var multipleObjects = JSON.parse(localStorage.getItem('users'))
+
+    var singleObject = multipleObjects.find((object)=>object.email === userObject.Email)
+
+    if(oldPass != userObject.password){
+      alert('Please enter correct password : (')
+    }
+
+    if(newPass == confirmPass){
+
+    if(oldPass === userObject.password){
+      userObject.password = newPass;
+      singleObject.password = newPass;
+      alert("User password changed successfully. your cart is waiting for you happy shopping!!!  : )")
+
+      setTimeout(() => {
+         window.location.href = "login.html";
+      }, 1500);
+    }
+  }else{
+    alert("New password and confirm password is not matched please check : (")
+  }
+
+    //localstorage data updated-in login user  
+
+    localStorage.setItem('login_user',JSON.stringify(userObject))
+
+   
+    
+      //localstorage data updated-in multiple users
+      localStorage.setItem('users',JSON.stringify(multipleObjects))
+
+  })
+
+</script>
+</html>
